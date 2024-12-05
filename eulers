@@ -1,0 +1,26 @@
+#include<stdio.h>
+float f(float x, float y)
+{
+    return (y-x)/(x+y);
+}
+int main()
+{
+    float x0,y0,xn,yn,h;
+    int n;
+    printf("Enter initial values: ");
+    scanf("%f%f",&x0,&y0);
+    printf("Enter xn: ");
+    scanf("%f",&xn);
+    printf("Enter no. of steps: ");
+    scanf("%d",&n);
+    h = (xn-x0)/n;
+
+    for(int i=0; i<n; i++)
+    {
+        yn = y0 + h*f(x0,y0);
+        printf("x=%.4f y=%.4f\n",x0,yn);
+        x0 = x0+h;
+        y0 = yn;
+    }
+    return 0;
+}
