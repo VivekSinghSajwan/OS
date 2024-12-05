@@ -1,86 +1,38 @@
+//newton forward interpolation
 #include<stdio.h>
-#include<stdlib.h>
-
-void printMatrix(float mat[][100], int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n + 1; j++)
-        {
-            printf("%.2f\t", mat[i][j]);
-        }
-        printf("\n");
-    }
-}
-
-void gaussElimination(float mat[][100], int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        if (mat[i][i] == 0) {
-            printf("Mathematical Error: Division by zero detected!\n");
-            exit(EXIT_FAILURE);
-        }
-        
-        for (int j = 0; j < n; j++)
-        {
-            if (j > i)
-            {
-                float ratio = mat[j][i] / mat[i][i];
-                for (int k = 0; k < n + 1; k++)
-                    mat[j][k] = mat[j][k] - ratio * mat[i][k];
-            }
-        }
-    }
-}
-
-void findValues(float mat[][100], int n, float val[])
-{
-    val[n-1] = mat[n-1][n] / mat[n-1][n-1];
-
-    for (int i = n-2; i >= 0; i--)
-    {
-        float sum = 0;
-        for (int j = i+1; j<n; j++)
-        {
-            sum = sum + mat[i][j] * val[j];
-        }
-        val[i] = (mat[i][n] - sum) / mat[i][i];
-    }
-}
 
 int main()
 {
     int n;
-    printf("Enter the order of matrix: ");
-    scanf("%d", &n);
-
-    float mat[100][100], val[100];
-    printf("Enter augmented matrix: \n");
-    for (int i = 0; i < n; i++)
+    float x;
+    printf("Enter no. of values: ");
+    scanf("%d",&n);
+    float mat[n][n+1];
+    printf("Enter value to be found: ");
+    scanf("%f",&x);
+    printf("Enter x and y values respectively: ");
+    for(int i=0; i<n; i++)
     {
-        for (int j = 0; j < n + 1; j++)
-        {
-            scanf("%f", &mat[i][j]);
-        }
+        scanf("%f",&mat[i][0]);
+        scanf("%f",&mat[i][1]);
+    }
+    //difference table
+    for(int i=2; i<n+1; i++)
+    {
+        for(int j=0; j<n-i+1; j++)
+            mat[j][i] = mat[j+1][i-1]-mat[j][i-1];
+    }
+    float u = (x-mat[0][0])/(mat[1][0]-mat[0][0]);
+    int fact = 1;
+    float y = mat[0][1];
+    float u1 = u;
+
+    for(int i=2; i<n+1; i++)
+    {
+        y += (u1*mat[0][i])/fact;
+        fact = fact*i;
+        u1 = u1*(u-(i-1));
     }
 
-    // Display augmented matrix
-    printf("Augmented Matrix: \n");
-    printMatrix(mat, n);
-
-    // Perform Gauss Elimination
-    gaussElimination(mat, n);
-    printf("Upper Triangular Matrix: \n");
-    printMatrix(mat, n);
-
-    // Find the solution
-    findValues(mat, n, val);
-
-    // Print the solution
-    printf("Solution: \n");
-    for (int i = 0; i < n; i++)
-        printf("x%d: %.2f\n", i, val[i]);
-
-    return 0;
+    printf("%f",y);
 }
