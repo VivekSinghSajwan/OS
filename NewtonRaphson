@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <math.h>
+
+#define accuracy 0.000001
+
+float f(float x) {
+    return 3*x - cos(x) - 1;
+}
+float df(float x) {
+    return 3 + sin(x);
+}
+
+int main() {
+    printf("Equation: 3x-cosx-1\n");
+    float x0, x1;
+    int flag = 0;
+    int itr = 0;
+
+    printf("Enter x0: ");
+    scanf("%f", &x0);
+
+    while (flag == 0) {
+        itr++;
+        x1 = x0- f(x0)/df(x0);
+        printf("Iteration: %d, x1: %f, f(x1): %f\n", itr, x1, f(x1));
+        if (fabs(f(x1)) <= accuracy) 
+        {
+            printf("Root found at x: %f in %d iterations\n", x1, itr);
+            flag = 1;
+        }
+        // Update x0 and x1 for the next iteration
+        x0 = x1;
+    }
+
+    return 0;
+}
